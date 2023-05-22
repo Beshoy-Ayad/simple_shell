@@ -106,6 +106,7 @@ void execute_command(char **argv)
 		}
 	}
 }
+
 /**
  * execute_builtin - check and execute built-in commands
  * @argv: an array of strings containing the command and arguments
