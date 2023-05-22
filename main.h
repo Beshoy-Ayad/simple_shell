@@ -15,8 +15,8 @@
 #define DELIM " \t\r\n\a "
 
 char **command(char *line);
-void Exec(char **argv);
-int Exec1(char **argv);
+int exec_c(char **argv);
+int exec_b(char **argv);
 void code_loop(void);
 int main(void);
 
