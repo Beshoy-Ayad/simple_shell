@@ -7,15 +7,13 @@
  */
 char **parse_command(char *line)
 {
-    char **argv = malloc(MAX_ARG * sizeof(char *));
-    if (!argv)
+	int i = 0;
+	char **argv = malloc(MAX_ARG * sizeof(char *));
+	char *token = strtok(line, DELIM);
+	if (!argv)
     {
         perror("malloc");
         exit(1);
-    }
-    int i = 0;
-    char *token = strtok(line, DELIM);
-
     while (token != NULL)
     {
         argv[i] = token;
@@ -30,18 +28,18 @@ char **parse_command(char *line)
  * execute_command - execute a command with optional pipes
  * @argv: an array of strings containing the command and arguments
  */
+
 void execute_command(char **argv)
 {
     pid_t pid;
     int status;
     char *pipe_symbol = strchr(argv[0], '|');
-
-    if (pipe_symbol != NULL)
+	char **cmd1 = parse_command(argv[0]);
+        char **cmd2 = parse_command(pipe_symbol + 1);
+    	int pipefd[2];
+	if (pipe_symbol != NULL)
     {
         *pipe_symbol = '\0';
-        char **cmd1 = parse_command(argv[0]);
-        char **cmd2 = parse_command(pipe_symbol + 1);
-        int pipefd[2];
 
         if (pipe(pipefd) == -1)
         {
@@ -113,6 +111,7 @@ void execute_command(char **argv)
  * @argv: an array of strings containing the command and arguments
  * Return: 1 if the command is built-in, 0 otherwise
  */
+
 int execute_builtin(char **argv)
 {
     if (strcmp(argv[0], "cd") == 0)
@@ -129,6 +128,7 @@ int execute_builtin(char **argv)
 /**
  * shell_loop - run a shell loop that reads, parses and executes commands
  */
+
 void shell_loop(void)
 {
     char *line;
@@ -159,6 +159,7 @@ void shell_loop(void)
  * main - invoke the shell loop
  * Return: 0 on success
  */
+
 int main(void)
 {
     shell_loop();

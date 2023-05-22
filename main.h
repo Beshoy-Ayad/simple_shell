@@ -14,5 +14,10 @@
 #define MAX_ARG 64
 #define DELIM " \t\r\n\a "
 
+char **command(char *line);
+void Exec(char **argv);
+int Exec1(char **argv);
+void code_loop(void);
+int main(void);
 
 #endif
