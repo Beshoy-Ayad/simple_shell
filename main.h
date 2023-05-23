@@ -18,6 +18,6 @@ char **command(char *line);
 int exec_c(char **argv);
 int exec_b(char **argv);
 void code_loop(void);
-int main(void);
+int main(void);
 
 #endif

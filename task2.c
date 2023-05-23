@@ -26,19 +26,20 @@ char **command(char *line)
     return (argv);
 }
 /**
- *  - execute a command with optional pipes
+ * exec_c - execute a command with optional pipes
  * @argv: an array of strings containing the command and arguments
+ * Return: 0 if no pipes, 1 if pipes
  */
 
-int exec_c(char *argv)
+int exec_c(char **argv) /* Changed parameter type to char ** */
 {
     pid_t pid;
     int status;
-    char pipe_symbol = NULL; / Initialized pipe_symbol to NULL */
+    char *pipe_symbol = NULL; /* Initialized pipe_symbol to NULL */
     char **cmd1 = command(argv[0]);
     char **cmd2 = command(pipe_symbol + 1);
     int pipefd[2];
-    if (argv[0] != NULL)
+    if (argv[0] != NULL)      /* Added check for null pointer */
     {
         pipe_symbol = strchr(argv[0], '|');
     }
@@ -83,13 +84,13 @@ int exec_c(char *argv)
                 exit(1);
             }
         }
-        close(pipefd[0]);
-        close(pipefd[1]);
-        wait(NULL);
-        wait(NULL);
-        free(cmd1);
-        free(cmd2);
-        return (1);
+        close(pipefd[0]); /* Added closing of pipe file descriptors */
+        close(pipefd[1]); /* Added closing of pipe file descriptors */
+        wait(NULL);       /* Added waiting for child processes */
+        wait(NULL);       /* Added waiting for child processes */
+        free(cmd1);       /* Added freeing of cmd1 pointer */
+        free(cmd2);       /* Added freeing of cmd2 pointer */
+        return (1);       /* Added return statement for pipes */
     }
     else
     {
@@ -111,7 +112,7 @@ int exec_c(char *argv)
         {
             wait(&status);
         }
-        return (0);
+        return (0); /* Added return statement for no pipes */
     }
 }
 
@@ -149,6 +150,7 @@ void code_loop(void)
         {
             break;
         }
+
         if (!exec_b(argv))
         {
             exec_c(argv);
@@ -157,8 +159,7 @@ void code_loop(void)
         free(argv);
     }
 }
-
-int main(void)
+int main(void) 
 {
     code_loop();
     return (0);
