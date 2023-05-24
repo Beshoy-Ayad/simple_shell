@@ -46,7 +46,19 @@ ssize_t read_input(char *In_bu)
 {
 	ssize_t bytes = 0;
 
-	bytes = read(STDIN_FILENO, In_bu, MAX_INPUT_LENGTH);
+	if (NON_INTERACTIVE_MODE)
+	{
+		bytes = read(STDIN_FILENO, In_bu, MAX_INPUT_LENGTH);
+	}
+	else
+	{
+		char *line = NULL;
+		size_t len = 0;
+
+		bytes = getline(&line, &len, stdin);
+		strncpy(In_bu, line, MAX_INPUT_LENGTH);
+		free(line);
+	}
 	if (bytes == -1)
 	{
 		perror("Error Kindly contact support");
@@ -57,7 +69,6 @@ ssize_t read_input(char *In_bu)
 		if (NON_INTERACTIVE_MODE)
 			exit(0);
 		else
-			
 			write(STDOUT_FILENO, "End of Input\n", 15);
 		exit(0);
 	}
