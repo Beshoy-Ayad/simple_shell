@@ -8,9 +8,9 @@
 int main(void)
 {
 	char In_bu[MAX_INPUT_LENGTH];
-	char arg[50];
-	char *argv[MAXARGS];
-	int status = 0;
+	/*char arg[50];*/
+	/*char *argv[MAXARGS];*/
+	/*int status = 0;*/
 
 	while (1)
 	{
