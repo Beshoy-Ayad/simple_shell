@@ -23,5 +23,7 @@ void eval(char *cmdline);
 int builtin_command(char **argv);
 char *search_path(char *file);
 ssize_t read_input(char *In_bu);
+void parse_input(char *In_bu, char *delim, char **argv);
+void execute_command(char **argv);
 
 #endif

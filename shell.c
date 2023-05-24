@@ -8,14 +8,27 @@
 int main(void)
 {
 	char In_bu[MAX_INPUT_LENGTH];
-	/*char arg[50];*/
-	/*char *argv[MAXARGS];*/
-	/*int status = 0;*/
+	char arg[50];
+	char *argv[MAXARGS];
+	int status = 0;
 
 	while (1)
 	{
 		write(STDOUT_FILENO, "P)> ", 2);
 		read_input(In_bu);
+		parse_input(In_bu, " ", argv);
+		add_bin_prefix(argv, arg);
+		if (argv[0] == NULL)
+			continue;
+		if (strcmp(argv[0], "exit") == 0)
+		{
+			if (argv[1] != NULL)
+			{
+				status = atoi(argv[1]);
+			}
+			exit(status);
+		}
+		execute_command(argv);
 	}
 	return (0);
 }
