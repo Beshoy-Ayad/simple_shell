@@ -1,5 +1,7 @@
 #include "main.h"
 
+#define NON_INTERACTIVE_MODE (isatty(STDIN_FILENO) == 0)
+
 /**
  * main - Simple shell program.
  * Return: Always 0.
@@ -14,7 +16,8 @@ int main(void)
 
 	while (1)
 	{
-		write(STDOUT_FILENO, "P)> ", 2);
+		if (!NON_INTERACTIVE_MODE)
+			write(STDOUT_FILENO, "P)> ", 2);
 		read_input(In_bu);
 		parse_input(In_bu, " ", argv);
 		add_bin_prefix(argv, arg);
@@ -51,7 +54,11 @@ ssize_t read_input(char *In_bu)
 	}
 	else if (bytes == 0)
 	{
-		write(STDOUT_FILENO, "End of Input\n", 15);
+		if (NON_INTERACTIVE_MODE)
+			exit(0);
+		else
+			
+			write(STDOUT_FILENO, "End of Input\n", 15);
 		exit(0);
 	}
 	if (In_bu[bytes - 1] == '\n')
