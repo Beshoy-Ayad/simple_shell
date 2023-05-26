@@ -1,6 +1,5 @@
 #include "main.h"
 
-
 /**
  * main - Simple shell program.
  * Return: Always 0.

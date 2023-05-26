@@ -71,7 +71,7 @@ void non_interactive_mode(char *input_buffer,
 	while (command)
 	{
 		string_token(command, " ", lines);
-		if (lines[0] && !built_in_command(lines))
+		if (lines[0] && !commands(lines))
 		{
 			add_bin_prefix(lines, new_arg);
 			id = fork();
@@ -110,7 +110,7 @@ void interactive_mode(int bytes, int id, char
 {
 	while (1)
 	{
-		write(STDOUT_FILENO, "$ALX>: ", 2);
+		write(STDOUT_FILENO, "$$: ", 2);
 		bytes = read(STDIN_FILENO, input_buffer, MAX_INPUT_LENGTH);
 		if (bytes == -1)
 		{
@@ -125,7 +125,7 @@ void interactive_mode(int bytes, int id, char
 		if (bytes > 0 && input_buffer[bytes - 1] == '\n')
 			input_buffer[bytes - 1] = '\0';
 		string_token(input_buffer, " ", argv_buffer);
-		if (argv_buffer[0] && !built_in_command(argv_buffer))
+		if (argv_buffer[0] && !commands(argv_buffer))
 		{
 			add_bin_prefix(argv_buffer, new_arg);
 			id = fork();
