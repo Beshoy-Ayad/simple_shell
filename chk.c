@@ -8,20 +8,27 @@
  */
 void add_bin_prefix(char *argv[], char *new_arg)
 {
-	char *prefix_path = "/bin/";
-	size_t prefix_len = strlen(prefix_path);
-	size_t arg_len = strlen(argv[0]);
+	char *pathes = "/bin/";
+	size_t lenth;
+	size_t arg_len;
 
 	if (argv[0] == NULL)
 	{
 		return;
 	}
-	if (strncmp(argv[0], prefix_path, prefix_len) == 0)
+
+	lenth = _strlen(pathes);
+	arg_len = _strlen(argv[0]);
+	if (_strcmp(argv[0], pathes) == 0 ||
+			_strcmp(argv[0], "./") == 0 ||
+			_strcmp(argv[0], "../") == 0)
 	{
 		return;
 	}
-	strncpy(new_arg, prefix_path, prefix_len);
-	strncpy(new_arg + prefix_len, argv[0], arg_len);
-	new_arg[prefix_len + arg_len] = '\0';
+
+	_strncpy(new_arg, pathes, lenth);
+	_strncpy(new_arg + lenth, argv[0], arg_len);
+	new_arg[lenth + arg_len] = '\0';
+
 	argv[0] = new_arg;
 }
