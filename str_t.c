@@ -14,33 +14,35 @@ void string_token(char *str, char *delimiter, char *argv[])
 	char *st_P = NULL;
 	char *nd_P = NULL;
 	int argc = 0;
+	int len;
 
-	if (str != NULL)
+	if (str)
 	{
-		st_P = str;
+		len = _strlen(str);
+		while (len > 0 && str[len - 1] == ' ')
+			str[--len] = '\0';
 	}
-	while (*st_P && *st_P == ' ')
-	{
+	st_P = str;
+	while (*st_P == ' ')
 		st_P++;
-	}
 	nd_P = st_P;
-	while (*st_P != '\0')
+	while (*st_P)
 	{
-		if (*st_P == *delimiter)
+		if (_strcmp(st_P, delimiter) == 0)
 		{
 			*st_P = '\0';
-			while (*(st_P + 1) == ' ')
-			{
+			st_P++;
+			while (*st_P == ' ')
 				st_P++;
-			}
 			argv[argc++] = nd_P;
-			nd_P = st_P + 1;
-			if (argc >= 10)
-			{
+			nd_P = st_P;
+			if (argc >= MAXARGS)
 				break;
-			}
 		}
-		st_P++;
+		else
+		{
+			st_P++;
+		}
 	}
 	argv[argc++] = nd_P;
 	argv[argc] = NULL;

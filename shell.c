@@ -29,7 +29,7 @@ int main(void)
  * commands - is built-in command.
  * @argv: arguments.
  * Return: 0 or 1.
- * */
+ **/
 int commands(char **argv)
 {
 	char **envp;
