@@ -1,6 +1,5 @@
 #include "main.h"
 
-#define NON_INTERACTIVE_MODE (isatty(STDIN_FILENO) == 0)
 
 /**
  * main - Simple shell program.
@@ -9,125 +8,50 @@
 
 int main(void)
 {
-	char In_bu[MAX_INPUT_LENGTH];
-	char arg[50];
-	char *argv[MAXARGS];
-	int status = 0;
+	pid_t id = 0;
+	ssize_t bytes = 0;
+	char in[MAX_INPUT_LENGTH];
+	char new[50];
+	char *argv_Bu[MAXARGS];
 
-	while (1)
+	if (isatty(STDIN_FILENO))
 	{
-		if (!NON_INTERACTIVE_MODE)
-			write(STDOUT_FILENO, "P)> ", 2);
-		read_input(In_bu);
-		parse_input(In_bu, " ", argv);
-		add_bin_prefix(argv, arg);
-		if (argv[0] == NULL)
-			continue;
-		if (strcmp(argv[0], "exit") == 0)
-		{
-			if (argv[1] != NULL)
-			{
-				status = atoi(argv[1]);
-			}
-			exit(status);
-		}
-		execute_command(argv);
+		interactive_mode(bytes, id, in, argv_Bu, new);
+	}
+	else
+	{
+		non_interactive_mode(in, argv_Bu, new);
 	}
 	return (0);
 }
 
 /**
- * read_input - Reads the user input from stdin.
- * @In_bu: The buffer to store the input.
- * Return: The number of bytes read, or -1 on error.
- * **/
-
-ssize_t read_input(char *In_bu)
+ * commands - is built-in command.
+ * @argv: arguments.
+ * Return: 0 or 1.
+ * */
+int commands(char **argv)
 {
-	ssize_t bytes = 0;
+	char **envp;
+	int exit_status;
 
-	if (NON_INTERACTIVE_MODE)
+	if (_strcmp(argv[0], "exit") == 0)
 	{
-		bytes = read(STDIN_FILENO, In_bu, MAX_INPUT_LENGTH);
+		exit_status = argv[1] ? _atoi(argv[1]) : EXIT_SUCCESS;
+		if (exit_status < 0)
+			exit(EXIT_FAILURE);
+		exit(exit_status);
 	}
-	else
+	if (_strcmp(argv[0], "env") == 0)
 	{
-		char *line = NULL;
-		size_t len = 0;
-
-		bytes = getline(&line, &len, stdin);
-		strncpy(In_bu, line, MAX_INPUT_LENGTH);
-		free(line);
-	}
-	if (bytes == -1)
-	{
-		perror("Error Kindly contact support");
-		return (-1);
-	}
-	else if (bytes == 0)
-	{
-		if (NON_INTERACTIVE_MODE)
-			exit(0);
-		else
-			write(STDOUT_FILENO, "End of Input\n", 15);
-		exit(0);
-	}
-	if (In_bu[bytes - 1] == '\n')
-	{
-		In_bu[bytes - 1] = '\0';
-	}
-	return (bytes);
-}
-
-/**
- * parse_input - Parses the user input into arguments.
- * @In_bu: The buffer that contains the input.
- * @delim: The delimiter to split the input by.
- * @argv: The array to store the arguments.
- * Return: Nothing.
- * **/
-void parse_input(char *In_bu, char *delim, char **argv)
-{
-	int i = 0;
-	char *token = NULL;
-
-	token = strtok(In_bu, delim);
-
-	while (token != NULL)
-	{
-		argv[i] = token;
-		i++;
-		token = strtok(NULL, delim);
-	}
-	argv[i] = NULL;
-}
-
-/**
- * execute_command - Executes the command given by the user.
- * @argv: The array that contains the command and arguments.
- * Return: Nothing.
- * **/
-void execute_command(char **argv)
-{
-	pid_t id;
-	int status = 0;
-
-	id = fork();
-
-	if (id == -1)
-	{
-		perror("Fail to fork");
-		exit(EXIT_FAILURE);
-	}
-	else if (id == 0)
-	{
-		if (access(argv[0], X_OK) == 0)
+		envp = environ;
+		while (*envp)
 		{
-			execve(argv[0], argv, NULL);
+			write(STDOUT_FILENO, *envp, _strlen(*envp));
+			write(STDOUT_FILENO, "\n", 1);
+			envp++;
 		}
-		perror("Fail to run this command");
-		exit(EXIT_FAILURE);
+		return (1);
 	}
-	else
-		wait(&status);
+	return (0);
 }
